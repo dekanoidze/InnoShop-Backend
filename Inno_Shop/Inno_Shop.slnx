@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="InnoShop.ProductService.API/InnoShop.ProductService.API.csproj" />
+  <Project Path="InnoShop.ProductService.Application/InnoShop.ProductService.Application.csproj" />
+  <Project Path="InnoShop.ProductService.Domain/InnoShop.ProductService.Domain.csproj" />
+  <Project Path="InnoShop.ProductService.Infrastructure/InnoShop.ProductService.Infrastructure.csproj" />
+  <Project Path="InnoShop.UserService.API/InnoShop.UserService.API.csproj" />
+  <Project Path="InnoShop.UserService.Application/InnoShop.UserService.Application.csproj" />
+  <Project Path="InnoShop.UserService.Domain/InnoShop.UserService.Domain.csproj" />
+  <Project Path="InnoShop.UserService.Infrastructure/InnoShop.UserService.Infrastructure.csproj" />
+</Solution>
