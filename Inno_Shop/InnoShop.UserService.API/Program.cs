@@ -9,6 +9,9 @@ using InnoShop.UserService.Application.Interfaces;
 using InnoShop.UserService.Infrastructure.Repositories;
 using InnoShop.UserService.Application.Features.Auth.Commands;
 using InnoShop.UserService.Infrastructure.Data;
+using FluentValidation;
+using InnoShop.UserService.Application.Behaviors;
+using InnoShop.UserService.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +45,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+builder.Services.AddValidatorsFromAssembly(typeof(RegisterCommand).Assembly);
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
 
 var app = builder.Build();
 
@@ -58,6 +64,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 
