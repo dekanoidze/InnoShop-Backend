@@ -39,9 +39,14 @@ namespace InnoShop.UserService.Application.Features.Auth.Commands
 
             await _userRepository.AddAsync(user);
 
+            var confirmationToken=Guid.NewGuid().ToString();
+            user.EmailConfirmationToken = confirmationToken;
+            user.EmailConfirmationTokenExpiry = DateTime.UtcNow.AddDays(1);
+            await _userRepository.UpdateAsync(user);
+
             await _emailService.SendEmailAsync(
-                user.Email, "Welcome to Inno Shop",
-                $"<h1>Welcome {user.Name}!</h1><p>Your account has been created successfully.</p>"
+                user.Email, "Confrim your email",
+                $"<h1>Welcome {user.Name}!</h1><p>Your confirmation token is : {confirmationToken}</p>"
                 );
             return _jwtService.GenerateToken(user);
         }
