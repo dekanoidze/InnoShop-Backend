@@ -15,5 +15,6 @@ namespace InnoShop.UserService.Application.Interfaces
         Task AddAsync(User user);
         Task UpdateAsync(User user);
         Task DeleteAsync(Guid id);
+        Task<User?> GetByResetTokenAsync(string Token);
     }
 }
