@@ -25,5 +25,17 @@ namespace InnoShop.UserService.API.Controllers
             var token=await _mediator.Send(command);
             return Ok(new { token });
         }
+        [HttpPost("forget-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordCommand command)
+        {
+            var token=await _mediator.Send(command);
+            return Ok(new { token });
+        }
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
+        {
+            var token=await _mediator.Send(command);
+            return Ok(new { token });
+        }
     }
 }

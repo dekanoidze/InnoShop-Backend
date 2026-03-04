@@ -16,6 +16,8 @@ namespace InnoShop.UserService.Domain.Entities
         public Boolean IsActive { get; set; }=true;
         public Boolean IsEmailConfirmed {  get; set; }=false;
         public DateTime CreatedAt {  get; set; }=DateTime.UtcNow;
+        public string? PasswordResetToken {  get; set; }
+        public DateTime? PasswordResetTokenExpiry {  get; set; }
 
     }
 }

@@ -48,5 +48,9 @@ namespace InnoShop.UserService.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<User?> GetByResetTokenAsync(string Token)
+        {
+            return await _context.Users.FirstOrDefaultAsync(p=>p.PasswordResetToken==Token);
+        }
     }
 }
