@@ -24,9 +24,9 @@ namespace InnoShop.UserService.Application.Features.Auth.Commands
         public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var existingUser = await _userRepository.GetByEmailAsync(request.Email);
-            if (existingUser == null) { throw new Exception("Invalid email or password"); }
+            if (existingUser == null) { throw new UnauthorizedAccessException("Invalid email or password");}
             var isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, existingUser.PasswordHash);
-            if (!isPasswordValid) { throw new Exception("Invalid email or password"); }
+            if (!isPasswordValid) { throw new UnauthorizedAccessException("Invalid email or password"); }
 
             return _jwtService.GenerateToken(existingUser);
 
