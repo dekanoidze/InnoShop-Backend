@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text.Json;
 
-namespace InnoShop.UserService.API.Middleware
+namespace InnoShop.ProductService.API.Middleware
 {
     public class ExceptionMiddleware
     {
@@ -23,13 +23,6 @@ namespace InnoShop.UserService.API.Middleware
                 context.Response.ContentType = "application/json";
                 var errors = ex.Errors.Select(e => e.ErrorMessage).ToList();
                 var response = new { errors };
-                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
-            }
-            catch(UnauthorizedAccessException ex)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                context.Response.ContentType = "application/json";
-                var response=new { error = ex.Message };
                 await context.Response.WriteAsync(JsonSerializer.Serialize(response));
             }
             catch (Exception ex)
