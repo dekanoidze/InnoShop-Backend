@@ -26,6 +26,10 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Regis
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IEmailService,EmailService>();
+builder.Services.AddHttpClient<IProductServiceClient, ProductServiceClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ProductServiceUrl"]!);
+});
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

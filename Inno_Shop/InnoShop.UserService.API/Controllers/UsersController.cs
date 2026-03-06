@@ -31,11 +31,18 @@ namespace InnoShop.UserService.API.Controllers
             return Ok(update);
         }
         [HttpPut("{id}/deactivate")]
-        public async Task<IActionResult> DeactivateById(Guid id,DeactivateUserCommand deactivateUser)
+        public async Task<IActionResult> DeactivateById(Guid id)
         {
-            deactivateUser.Id = id;
-            var deactivate = await mediator.Send(deactivateUser);
-            return Ok(deactivate);
+            var command = new DeactivateUserCommand { Id = id};
+            var result = await mediator.Send(command);
+            return Ok(result);
+        }
+        [HttpPut("{id}/reactive")]
+        public async Task<IActionResult> ReactivateById(Guid id)
+        {
+            var command=new ReactivateUserCommand { Id = id};
+            var result = await mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]

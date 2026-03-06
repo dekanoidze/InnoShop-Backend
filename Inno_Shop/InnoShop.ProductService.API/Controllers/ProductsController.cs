@@ -10,7 +10,7 @@ namespace InnoShop.ProductService.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductsController(IMediator mediator) : ControllerBase
+    public class ProductsController(IMediator mediator, IConfiguration configuration) : ControllerBase
     {
         [AllowAnonymous]
         [HttpGet]
@@ -46,6 +46,25 @@ namespace InnoShop.ProductService.API.Controllers
             var result = await mediator.Send(command);
             return Ok(new {result});
         }
+        [AllowAnonymous]
+        [HttpPost("hide-by-user/{userId}")]
+        public async Task<IActionResult> HideUserById(Guid userId, [FromHeader(Name = "X-Internal-Key")] string apiKey)
+        {
+            if (apiKey != configuration["InternalApiKey"])
+                return Unauthorized();
+            var result=await mediator.Send(new HideUserProductsCommand { UserId=userId} );
+            return Ok(new { result });
+        }
+        [AllowAnonymous]
+        [HttpPost("show-by-user/{userId}")]
+        public async Task<IActionResult> ShowUserById(Guid userId, [FromHeader(Name = "X-Internal-Key")] string apiKey)
+        {
+            if (apiKey != configuration["InternalApiKey"])
+                return Unauthorized();
+            var result = await mediator.Send(new ShowUserProductsCommand { UserId=userId});
+            return Ok(new {result});
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(Guid id, UpdateProductCommand command)
         {
