@@ -15,9 +15,9 @@ namespace InnoShop.ProductService.Application.Features.Commands
         public async Task<bool> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
             var product = await productRepository.GetByIdAsync(request.Id)
-            ?? throw new Exception("Product not found");
+            ?? throw new KeyNotFoundException("Product not found");
 
-            await productRepository.DeleteAsync(request.Id);
+            await productRepository.DeleteAsync(product.Id);
             return true;
         }
     }

@@ -12,19 +12,14 @@ using System.Security.Claims;
 
 namespace InnoShop.UserService.Infrastructure.Services
 {
-    public class JwtService : IJwtService
+    public class JwtService(IConfiguration configuration) : IJwtService
     {
-        private readonly IConfiguration _configuration;
-        public JwtService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
         public string GenerateToken(User user)
         {
-            var SecretKey = _configuration["JwtSettings:SecretKey"];
-            var Issuer = _configuration["JwtSettings:Issuer"];
-            var Audience = _configuration["JwtSettings:Audience"];
-            var Expiration = int.Parse(_configuration["JwtSettings:ExpirationMinutes"]!);
+            var SecretKey = configuration["JwtSettings:SecretKey"];
+            var Issuer = configuration["JwtSettings:Issuer"];
+            var Audience = configuration["JwtSettings:Audience"];
+            var Expiration = int.Parse(configuration["JwtSettings:ExpirationMinutes"]!);
 
             var Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey!));
             var Credentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256);

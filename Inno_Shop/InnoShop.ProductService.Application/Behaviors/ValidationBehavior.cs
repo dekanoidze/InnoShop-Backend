@@ -8,19 +8,14 @@ using MediatR;
 
 namespace InnoShop.ProductService.Application.Behaviors
 {
-    public class ValidationBehavior<Trequest, Tresponse> : IPipelineBehavior<Trequest, Tresponse> where Trequest : IRequest<Tresponse>
+    public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        private readonly IEnumerable<IValidator<Trequest>> _validators;
-        public ValidationBehavior(IEnumerable<IValidator<Trequest>> validators)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            _validators = validators;
-        }
-        public async Task<Tresponse> Handle(Trequest request, RequestHandlerDelegate<Tresponse> next, CancellationToken cancellationToken)
-        {
-            if (_validators.Any())
-            {
-                var context = new ValidationContext<Trequest>(request);
-                var failures = _validators.Select(v => v.Validate(context))
+            if (validators.Any())
+            {           
+                var context = new ValidationContext<TRequest>(request);
+                var failures = validators.Select(v => v.Validate(context))
                     .SelectMany(r => r.Errors).Where(f => f != null)
                     .ToList();
                 if (failures.Any())

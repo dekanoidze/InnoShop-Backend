@@ -11,24 +11,16 @@ using BCrypt.Net;
 
 namespace InnoShop.UserService.Application.Features.Auth.Commands
 {
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, string>
+    public class LoginCommandHandler(IUserRepository userRepository,IJwtService jwtService) : IRequestHandler<LoginCommand, string>
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtService _jwtService;
-
-        public LoginCommandHandler(IUserRepository userRepository, IJwtService jwtService)
-        {
-            _userRepository = userRepository;
-            _jwtService = jwtService;
-        }
         public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            var existingUser = await _userRepository.GetByEmailAsync(request.Email);
-            if (existingUser == null) { throw new UnauthorizedAccessException("Invalid email or password");}
+            var existingUser = await userRepository.GetByEmailAsync(request.Email)
+            ?? throw new UnauthorizedAccessException("Invalid email or password");
             var isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, existingUser.PasswordHash);
             if (!isPasswordValid) { throw new UnauthorizedAccessException("Invalid email or password"); }
 
-            return _jwtService.GenerateToken(existingUser);
+            return jwtService.GenerateToken(existingUser);
 
         }
     }
