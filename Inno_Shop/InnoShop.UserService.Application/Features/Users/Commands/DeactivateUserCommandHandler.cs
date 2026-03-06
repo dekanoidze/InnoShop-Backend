@@ -7,10 +7,11 @@ using MediatR;
 using InnoShop.UserService.Application.Features;
 using InnoShop.UserService.Application.Interfaces;
 using InnoShop.UserService.Domain.Entities;
+using InnoShop.UserService.Application.Services;
 
 namespace InnoShop.UserService.Application.Features.Users.Commands
 {
-    public class DeactivateUserCommandHandler(IUserRepository userRepository) : IRequestHandler<DeactivateUserCommand, bool>
+    public class DeactivateUserCommandHandler(IUserRepository userRepository,IProductServiceClient productServiceClient) : IRequestHandler<DeactivateUserCommand, bool>
     {
         public async Task<bool> Handle(DeactivateUserCommand request, CancellationToken cancellationToken)
         {
@@ -20,6 +21,7 @@ namespace InnoShop.UserService.Application.Features.Users.Commands
             user.IsActive = false;
 
             await userRepository.UpdateAsync(user);
+            await productServiceClient.HideUserProductsAsync(user.Id);
             return true;
         }
     }
