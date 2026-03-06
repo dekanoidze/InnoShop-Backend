@@ -48,5 +48,17 @@ namespace InnoShop.ProductService.Infrastructure.Repositories
             context.Products.UpdateRange(products);
             await context.SaveChangesAsync();
         }
+        public async Task<IEnumerable<Product>> SearchAsync(string? name, decimal? minPrice, decimal? maxPrice, bool? isAvailable)
+        {
+            var query = context.Products.AsQueryable().AsNoTracking();
+            
+            if (!string.IsNullOrWhiteSpace(name)) { query = query.Where(p => p.Name.Contains(name)); }
+            if (minPrice.HasValue) { query = query.Where(p => p.Price >= minPrice.Value); }
+            if (maxPrice.HasValue) { query = query.Where(p => p.Price <= maxPrice.Value); }
+            if (isAvailable.HasValue) { query=query.Where(p => p.IsAvailable==isAvailable.Value); }
+
+            return await query.ToListAsync();
+
+        }
     }
 }

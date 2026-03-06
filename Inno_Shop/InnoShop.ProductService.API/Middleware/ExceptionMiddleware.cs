@@ -4,18 +4,13 @@ using System.Text.Json;
 
 namespace InnoShop.ProductService.API.Middleware
 {
-    public class ExceptionMiddleware
+    public class ExceptionMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
-        public ExceptionMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
         public async Task InvokeAsync(HttpContext context)
         {
             try
             {
-                await _next(context);
+                await next(context);
             }
             catch (ValidationException ex)
             {
@@ -23,6 +18,13 @@ namespace InnoShop.ProductService.API.Middleware
                 context.Response.ContentType = "application/json";
                 var errors = ex.Errors.Select(e => e.ErrorMessage).ToList();
                 var response = new { errors };
+                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                context.Response.ContentType = "application/json";
+                var response = new { error = ex.Message };
                 await context.Response.WriteAsync(JsonSerializer.Serialize(response));
             }
             catch (Exception ex)

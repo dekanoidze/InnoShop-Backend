@@ -10,20 +10,11 @@ using MediatR;
 
 namespace InnoShop.UserService.Application.Features.Auth.Commands
 {
-    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, string>
+    public class RegisterCommandHandler(IUserRepository userRepository,IJwtService jwtService,IEmailService emailService) : IRequestHandler<RegisterCommand, string>
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtService _jwtService;
-        private readonly IEmailService _emailService;
-        public RegisterCommandHandler(IUserRepository userRepository, IJwtService jwtService, IEmailService emailService)
-        {
-            _userRepository = userRepository;
-            _jwtService = jwtService;
-            _emailService = emailService;
-        }
         public async Task<String> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            var existingUser = await _userRepository.GetByEmailAsync(request.Email);
+            var existingUser = await userRepository.GetByEmailAsync(request.Email);
             if (existingUser != null) { throw new Exception("User with this Email already exists"); }
 
             var passWordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -37,18 +28,18 @@ namespace InnoShop.UserService.Application.Features.Auth.Commands
                 Role = "User"
             };
 
-            await _userRepository.AddAsync(user);
+            await userRepository.AddAsync(user);
 
             var confirmationToken=Guid.NewGuid().ToString();
             user.EmailConfirmationToken = confirmationToken;
             user.EmailConfirmationTokenExpiry = DateTime.UtcNow.AddDays(1);
-            await _userRepository.UpdateAsync(user);
+            await userRepository.UpdateAsync(user);
 
-            await _emailService.SendEmailAsync(
+            await emailService.SendEmailAsync(
                 user.Email, "Confrim your email",
                 $"<h1>Welcome {user.Name}!</h1><p>Your confirmation token is : {confirmationToken}</p>"
                 );
-            return _jwtService.GenerateToken(user);
+            return jwtService.GenerateToken(user);
         }
     }
 }

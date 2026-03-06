@@ -16,5 +16,6 @@ namespace InnoShop.ProductService.Application.Interfaces
         Task DeleteAsync(Guid id);
         Task UpdateAsync(Product product);
         Task UpdateRangeAsync(IEnumerable<Product> products);
+        Task<IEnumerable<Product>> SearchAsync(string? name,decimal? maxValue,decimal? minValue,bool? isAvailable);
     }
 }

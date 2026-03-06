@@ -10,51 +10,46 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InnoShop.UserService.Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository(AppDbContext context) : IUserRepository
     {
-        private readonly AppDbContext _context;
-        public UserRepository(AppDbContext context)
-        {
-            _context = context;
-        }
         public async Task<User?> GetByIdAsync(Guid id)
         {
-            return await _context.Users.FindAsync(id);
+            return await context.Users.FindAsync(id);
         }
         public async Task<User?> GetByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email==email);
+            return await context.Users.FirstOrDefaultAsync(u => u.Email==email);
         }
         public async Task<IEnumerable<User>> GetAllUserAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await context.Users.ToListAsync();
         }
         public async Task AddAsync(User user)
         {
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            await context.Users.AddAsync(user);
+            await context.SaveChangesAsync();
         }
         public async Task UpdateAsync(User user)
         {
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            context.Users.Update(user);
+            await context.SaveChangesAsync();
         }
         public async Task DeleteAsync(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await context.Users.FindAsync(id);
             if (user != null)
             {
-                _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
+                context.Users.Remove(user);
+                await context.SaveChangesAsync();
             }
         }
         public async Task<User?> GetByResetTokenAsync(string Token)
         {
-            return await _context.Users.FirstOrDefaultAsync(p=>p.PasswordResetToken==Token);
+            return await context.Users.FirstOrDefaultAsync(p=>p.PasswordResetToken==Token);
         }
         public async Task<User?> GetByEmailConfirmationTokenAsync(string Token)
         {
-            return await _context.Users.FirstOrDefaultAsync(e=>e.EmailConfirmationToken==Token);
+            return await context.Users.FirstOrDefaultAsync(e=>e.EmailConfirmationToken==Token);
         }
     }
 }

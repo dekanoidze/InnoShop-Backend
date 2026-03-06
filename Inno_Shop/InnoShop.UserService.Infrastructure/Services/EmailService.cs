@@ -11,21 +11,16 @@ using MimeKit;
 
 namespace InnoShop.UserService.Infrastructure.Services
 {
-    public class EmailService : IEmailService
+    public class EmailService(IConfiguration configuration) : IEmailService
     {
-        private readonly IConfiguration _configuration;
-        public EmailService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
         public async Task SendEmailAsync(string toEmail,string subject,string body)
         {
-            var host = _configuration["EmailSettings:Host"];
-            var port = int.Parse(_configuration["EmailSettings:Port"]!);
-            var username = _configuration["EmailSettings:Username"];
-            var password = _configuration["EmailSettings:Password"];
-            var fromEmail = _configuration["EmailSettings:FromEmail"];
-            var fromName = _configuration["EmailSettings:FromName"];
+            var host = configuration["EmailSettings:Host"];
+            var port = int.Parse(configuration["EmailSettings:Port"]!);
+            var username = configuration["EmailSettings:Username"];
+            var password = configuration["EmailSettings:Password"];
+            var fromEmail = configuration["EmailSettings:FromEmail"];
+            var fromName = configuration["EmailSettings:FromName"];
 
             var email = new MimeMessage();
             email.From.Add(new MailboxAddress(fromName, fromEmail!));
