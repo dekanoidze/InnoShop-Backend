@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Security.Claims;
 
 namespace InnoShop.ProductService.API.Controllers
 {
@@ -43,6 +44,7 @@ namespace InnoShop.ProductService.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(CreateProductCommand command)
         {
+            command.UserId=Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await mediator.Send(command);
             return Ok(new {result});
         }
@@ -68,6 +70,12 @@ namespace InnoShop.ProductService.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(Guid id, UpdateProductCommand command)
         {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var product = await mediator.Send(new GetProductByIdQuery { Id = id });
+            if (product!.UserId != userId)
+            {
+                return StatusCode(403, new { error = "You can only edit your own product" });
+            }
             command.Id = id;
             var result = await mediator.Send(command);
             return Ok(new { result });
@@ -75,6 +83,12 @@ namespace InnoShop.ProductService.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(Guid id, DeleteProductCommand command)
         {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var product = await mediator.Send(new GetProductByIdQuery { Id = id });
+            if (product!.UserId != userId)
+            {
+                return StatusCode(403, new { error = "You can only edit your own product" });
+            }
             command.Id = id;
             var delete=await mediator.Send(command);
             return Ok(delete);
