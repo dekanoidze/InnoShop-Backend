@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  userservice:
+    depends_on:
+      - sqlserver
+    build:
+      context: .
+      dockerfile: InnoShop.UserService.API/Dockerfile
+    ports:
+      - "5113:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=InnoShopUserDb;User Id=sa;Password=InnoShop@123456;TrustServerCertificate=True
+      - JwtSettings__SecretKey=ThisIsAVeryLongSecretKeyForJwtTokenGeneration123!
+      - JwtSettings__Issuer=InnoShopUserService
+      - JwtSettings__Audience=InnoShopUsers
+      - JwtSettings__ExpirationMinutes=60
+      - EmailSettings__Host=sandbox.smtp.mailtrap.io
+      - EmailSettings__Port=2525
+      - EmailSettings__Username=02df8a2339bfe8
+      - EmailSettings__Password=3adfae321515e2
+      - EmailSettings__FromEmail=noreply@innoshop.com
+      - EmailSettings__FromName=InnoShop
+      - ProductServiceUrl=http://productservice:8080/
+      - InternalApiKey=InnoShopInternalKey123!
+  productservice:
+    depends_on:
+      - sqlserver
+    build:
+      context: .
+      dockerfile: InnoShop.ProductService.API/Dockerfile
+    ports:
+      - "5076:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=InnoShopProductDb;User Id=sa;Password=InnoShop@123456;TrustServerCertificate=True
+      - JwtSettings__SecretKey=ThisIsAVeryLongSecretKeyForJwtTokenGeneration123!
+      - JwtSettings__Issuer=InnoShopUserService
+      - JwtSettings__Audience=InnoShopUsers
+      - InternalApiKey=InnoShopInternalKey123!
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=InnoShop@123456
+    ports:
+      - "1433:1433"
