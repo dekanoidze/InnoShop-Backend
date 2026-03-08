@@ -3,8 +3,10 @@
   <Project Path="InnoShop.ProductService.Application/InnoShop.ProductService.Application.csproj" />
   <Project Path="InnoShop.ProductService.Domain/InnoShop.ProductService.Domain.csproj" />
   <Project Path="InnoShop.ProductService.Infrastructure/InnoShop.ProductService.Infrastructure.csproj" />
+  <Project Path="InnoShop.ProductService.Tests/InnoShop.ProductService.Tests.csproj" Id="b516bfb0-0db1-4da4-b0a6-335bda81a47d" />
   <Project Path="InnoShop.UserService.API/InnoShop.UserService.API.csproj" />
   <Project Path="InnoShop.UserService.Application/InnoShop.UserService.Application.csproj" />
   <Project Path="InnoShop.UserService.Domain/InnoShop.UserService.Domain.csproj" />
   <Project Path="InnoShop.UserService.Infrastructure/InnoShop.UserService.Infrastructure.csproj" />
+  <Project Path="InnoShop.UserService.Tests/InnoShop.UserService.Tests.csproj" Id="6348c988-7b91-4ed4-8a6b-88fe4837e6e3" />
 </Solution>
