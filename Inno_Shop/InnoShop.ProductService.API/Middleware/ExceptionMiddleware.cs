@@ -27,6 +27,13 @@ namespace InnoShop.ProductService.API.Middleware
                 var response = new { error = ex.Message };
                 await context.Response.WriteAsync(JsonSerializer.Serialize(response));
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                context.Response.StatusCode= (int)HttpStatusCode.Unauthorized;
+                context.Response.ContentType = "application/json";
+                var response= new { error = ex.Message };
+                await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            }
             catch (Exception ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

@@ -3,7 +3,6 @@ using InnoShop.ProductService.Application.Features.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using System.Security.Claims;
 
 namespace InnoShop.ProductService.API.Controllers

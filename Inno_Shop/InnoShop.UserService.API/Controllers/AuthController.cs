@@ -33,9 +33,10 @@ namespace InnoShop.UserService.API.Controllers
             return Ok(new { token });
         }
         [HttpPost("confirm-email")]
-        public async Task<IActionResult> ConfrimEmail(ConfirmEmailCommand command)
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailCommand command)
         {
-            return Ok(new { command }); 
+            var result = await mediator.Send(command);
+            return Ok(new { result });
         }
     }
 }

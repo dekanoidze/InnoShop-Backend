@@ -14,4 +14,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "InnoShop.UserService.API.dll"]
-- ConnectionStrings__DefaultConnection=Server=sqlserver;Database=InnoShopUserDb;User Id=sa;Password=InnoShop@123456;TrustServerCertificate=True

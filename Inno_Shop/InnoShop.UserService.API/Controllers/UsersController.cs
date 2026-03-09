@@ -46,10 +46,9 @@ namespace InnoShop.UserService.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteById(Guid id, DeleteUserCommand deleteUser)
+        public async Task<IActionResult> DeleteById(Guid id)
         {
-            deleteUser.Id = id;
-            var delete=await mediator.Send(deleteUser);
+            var delete = await mediator.Send(new DeleteUserCommand { Id = id });
             return Ok(delete);
         }
     }
