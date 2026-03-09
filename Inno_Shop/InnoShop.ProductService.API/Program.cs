@@ -3,7 +3,6 @@ using InnoShop.ProductService.API.Middleware;
 using InnoShop.ProductService.Application.Behaviors;
 using InnoShop.ProductService.Application.Features.Commands;
 using InnoShop.ProductService.Application.Interfaces;
-using InnoShop.ProductService.Domain.Entities;
 using InnoShop.ProductService.Infrastructure.Data;
 using InnoShop.ProductService.Infrastructure.Repositories;
 using MediatR;

@@ -1,9 +1,9 @@
-version: '3.8'
 
 services:
   userservice:
     depends_on:
-      - sqlserver
+      sqlserver:
+        condition: service_healthy
     build:
       context: .
       dockerfile: InnoShop.UserService.API/Dockerfile
@@ -23,9 +23,11 @@ services:
       - EmailSettings__FromName=InnoShop
       - ProductServiceUrl=http://productservice:8080/
       - InternalApiKey=InnoShopInternalKey123!
+
   productservice:
     depends_on:
-      - sqlserver
+      sqlserver:
+        condition: service_healthy
     build:
       context: .
       dockerfile: InnoShop.ProductService.API/Dockerfile
@@ -37,6 +39,7 @@ services:
       - JwtSettings__Issuer=InnoShopUserService
       - JwtSettings__Audience=InnoShopUsers
       - InternalApiKey=InnoShopInternalKey123!
+
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
@@ -44,3 +47,13 @@ services:
       - SA_PASSWORD=InnoShop@123456
     ports:
       - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P InnoShop@123456 -Q 'SELECT 1' -No"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sqldata:

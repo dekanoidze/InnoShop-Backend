@@ -15,7 +15,7 @@ namespace InnoShop.ProductService.Application.Validators
             RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required")
                 .MaximumLength(100);
             RuleFor(x => x.Description).NotEmpty().WithMessage("Description is required").MaximumLength(500);
-            RuleFor(x => x.Price).GreaterThan(0).WithMessage("Price can not be less then 0");
+            RuleFor(x => x.Price).GreaterThan(0).WithMessage("Price can not be less than 0");
         }
 
     }

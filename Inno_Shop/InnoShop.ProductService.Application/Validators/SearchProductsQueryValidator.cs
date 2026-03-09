@@ -19,7 +19,7 @@ namespace InnoShop.ProductService.Application.Validators
                 .WithMessage("Maximum price can not be negative")
                 .When(x => x.MaxPrice.HasValue);
             RuleFor(x => x.MinPrice)
-                .LessThanOrEqualTo(x => x.MaxPrice).WithMessage("Minimum price can not be greater then Maximum price")
+                .LessThanOrEqualTo(x => x.MaxPrice).WithMessage("Minimum price can not be greater than Maximum price")
                 .When(x => x.MinPrice.HasValue && x.MaxPrice.HasValue);
 
         }

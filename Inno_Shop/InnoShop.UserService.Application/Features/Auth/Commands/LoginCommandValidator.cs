@@ -14,7 +14,7 @@ namespace InnoShop.UserService.Application.Features.Auth.Commands
             RuleFor(x => x.Email).NotEmpty().WithMessage("Email is required")
                 .EmailAddress().WithMessage("Invalid email");
             RuleFor(x => x.Password).NotEmpty().WithMessage("Password is required")
-                .MinimumLength(8).WithMessage("Password must be 8 characters");
+                .MinimumLength(8).WithMessage("Password must be at 8 characters");
         }
 
     }
