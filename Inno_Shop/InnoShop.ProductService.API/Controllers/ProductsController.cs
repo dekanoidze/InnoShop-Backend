@@ -50,7 +50,7 @@ namespace InnoShop.ProductService.API.Controllers
         }
         [AllowAnonymous]
         [HttpPost("hide-by-user/{userId}")]
-        public async Task<IActionResult> HideUserById(Guid userId, [FromHeader(Name = "X-Internal-Key")] string apiKey)
+        public async Task<IActionResult> HideUserById(Guid userId, [FromHeader(Name = "X-Internal-Key")] string? apiKey)
         {
             if (apiKey != configuration["InternalApiKey"])
                 return Unauthorized();
@@ -59,7 +59,7 @@ namespace InnoShop.ProductService.API.Controllers
         }
         [AllowAnonymous]
         [HttpPost("show-by-user/{userId}")]
-        public async Task<IActionResult> ShowUserById(Guid userId, [FromHeader(Name = "X-Internal-Key")] string apiKey)
+        public async Task<IActionResult> ShowUserById(Guid userId, [FromHeader(Name = "X-Internal-Key")] string? apiKey)
         {
             if (apiKey != configuration["InternalApiKey"])
                 return Unauthorized();
@@ -81,7 +81,7 @@ namespace InnoShop.ProductService.API.Controllers
             return Ok(new { result });
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(Guid id, DeleteProductCommand command)
+        public async Task<IActionResult> DeleteProduct(Guid id)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var product = await mediator.Send(new GetProductByIdQuery { Id = id });
@@ -89,11 +89,9 @@ namespace InnoShop.ProductService.API.Controllers
             {
                 return StatusCode(403, new { error = "You can only edit your own product" });
             }
-            command.Id = id;
-            var delete=await mediator.Send(command);
+
+            var delete = await mediator.Send(new DeleteProductCommand { Id = id });
             return Ok(delete);
         }
-
-
     }
 }
